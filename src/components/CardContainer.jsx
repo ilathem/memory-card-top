@@ -10,6 +10,16 @@ const searchUrl = `https://api.giphy.com/v1/gifs/search?api_key=${api_key}&q=${s
 export default function CardContainer() {
   const [gifs, setGifs] = useState();
   const [cardArray, setCardArray] = useState([]);
+  const [firstSelectedCard, setFirstSelectedCard] = useState();
+  const [score, setScore] = useState(0);
+
+  useEffect(() => {
+    setGifs(JSON.parse(localStorage.getItem('gifs')));
+  }, []);
+
+  useEffect(() => {
+    if (gifs) populateCardArray();
+  }, [gifs]);
 
   const fetchGifs = () => {
     fetch(searchUrl)
@@ -19,15 +29,6 @@ export default function CardContainer() {
         localStorage.setItem('gifs', JSON.stringify(data.data));
       });
   };
-
-  useEffect(() => {
-    console.log('loading gifs from localStorage...');
-    setGifs(JSON.parse(localStorage.getItem('gifs')));
-  }, []);
-
-  useEffect(() => {
-    if (gifs) populateCardArray();
-  }, [gifs]);
 
   const clearStorage = () => {
     localStorage.removeItem('gifs');
@@ -39,27 +40,73 @@ export default function CardContainer() {
       let gif, numInstances;
       while (true) {
         gif = gifs[getRandomInt(0, gifs.length - 1)];
-        console.log(`selected ${gif.title}`);
         numInstances = 0;
         tempCardArray.forEach((card) => {
-          console.log(`comparing ${card.title} to ${gif.title}`);
-          if (card && card.id === gif.id) numInstances++;
+          if (card.gif.id === gif.id) numInstances++;
         });
+        console.log(`selected gif ${gif.id}`);
+        console.log(Object.assign({}, tempCardArray));
+        console.log(`number of instances is ${numInstances}`);
         if (numInstances > 1) continue;
         else break;
       }
-      console.log(`adding ${gif.title} to card array`);
-      tempCardArray.push(gif);
-      console.log(tempCardArray);
+      tempCardArray.push({ matchFound: false, flipped: false, gif: gif });
     }
     setCardArray(tempCardArray);
   };
 
-  console.log('gifs:');
-  console.log(gifs);
-
-  console.log('cards:');
-  console.log(cardArray);
+  const selectCard = (cardArrayIndex) => {
+    console.log(`selecting ${cardArrayIndex}`);
+    setCardArray(
+      cardArray.map((value, index) => {
+        if (index === cardArrayIndex) {
+          return {
+            ...value,
+            flipped: true,
+          };
+        } else {
+          return value;
+        }
+      })
+    );
+    if (!firstSelectedCard) setFirstSelectedCard(cardArrayIndex);
+    else {
+      if (
+        cardArray[firstSelectedCard].gif.id === cardArray[cardArrayIndex].gif.id
+      ) {
+        setCardArray(
+          cardArray.map((value, index) => {
+            if (index === firstSelectedCard || index === cardArrayIndex) {
+              return {
+                ...value,
+                matchFound: true,
+              };
+            } else {
+              return value;
+            }
+          })
+        );
+        setFirstSelectedCard(null);
+      } else {
+        setTimeout(() => {
+          setCardArray(
+            cardArray.map((value, index) => {
+              if (index === firstSelectedCard || index === cardArrayIndex) {
+                return {
+                  ...value,
+                  flipped: false,
+                };
+              } else {
+                return value;
+              }
+            })
+          );
+        }, 2000);
+        setFirstSelectedCard(null);
+        setScore(score + 1);
+      }
+    }
+  };
 
   return (
     <div>
@@ -76,7 +123,17 @@ export default function CardContainer() {
         Clear local storage
       </button>
       <div className='w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 justify-items-center'>
-        {cardArray && cardArray.map((gif, index) => <Card key={index} gif={gif} />)}
+        {cardArray &&
+          cardArray.map((card, index) => (
+            <Card
+              indexNumber={index}
+              key={index}
+              gif={card.gif}
+              selectCard={() => selectCard(index)}
+              flipped={card.flipped}
+              matchFound={card.matchFound}
+            />
+          ))}
       </div>
     </div>
   );
