@@ -12,6 +12,7 @@ export default function CardContainer() {
   const [cardArray, setCardArray] = useState([]);
   const [score, setScore] = useState(0);
   const firstSelectedCardRef = useRef(null);
+  const [theme, setTheme] = useState('');
 
   useEffect(() => {
     setGifs(JSON.parse(localStorage.getItem('gifs')));
@@ -22,8 +23,12 @@ export default function CardContainer() {
   }, [gifs]);
 
   const fetchGifs = () => {
-    console.log('fetching new gifts...');
-    fetch(searchUrl)
+    console.log(`fetching new gifs for theme ${theme}...`);
+    let url = searchUrl;
+    if (theme) {
+      url = `https://api.giphy.com/v1/gifs/search?api_key=${api_key}&q=${theme}&limit=5&offset=0&rating=g&lang=en&bundle=messaging_non_clips`;
+    }
+    fetch(url)
       .then((res) => res.json())
       .then((data) => {
         setGifs(data.data);
@@ -144,21 +149,25 @@ export default function CardContainer() {
       firstSelectedCardRef.current = null;
     }
   };
-
+  
   return (
     <div>
-      <button
-        className='border-blue-700 text-blue-700 border-2 px-4 py-2 text-xl rounded-xl'
-        onClick={() => fetchGifs()}
-      >
-        Get new gifs!
-      </button>
-      <button
-        className='border-blue-700 text-blue-700 border-2 px-4 py-2 text-xl rounded-xl'
-        onClick={() => clearStorage()}
-      >
-        Clear local storage
-      </button>
+      <div className='w-full flex flex-row items-center justify-center'>
+        <label htmlFor='theme' className='text-xl'>Select your theme:</label>
+        <input value={theme} onChange={e => setTheme(e.target.value)} placeholder='cats' id='theme' className='text-white placeholder:text-gray-500 text-xl placeholder:text-xl ml-2 p-1'/>
+        <button
+          className='border-blue-700 text-blue-700 border-2 px-4 py-2 text-xl rounded-xl'
+          onClick={() => fetchGifs()}
+        >
+          Get new gifs!
+        </button>
+        <button
+          className='border-blue-700 text-blue-700 border-2 px-4 py-2 text-xl rounded-xl'
+          onClick={() => clearStorage()}
+        >
+          Clear local storage
+        </button>
+      </div>
       <div className='w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 justify-items-center'>
         {cardArray &&
           cardArray.map((card, index) => (
