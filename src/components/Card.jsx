@@ -44,6 +44,16 @@ export default function Card({
           ? selectCard()
           : console.log(`flipped is ${flipped} and clickable is ${clickable}`)
       }
+      onKeyDown={(e) => {
+        if (e.code == 'Space' || e.code == 'Enter') {
+          if (!flipped && clickable) {
+            selectCard();
+          } else {
+            console.log(`flipped is ${flipped} and clickable is ${clickable}`);
+          }
+        }
+      }}
+      tabIndex={'0'}
     >
       <div className='rounded-xl w-[200px] h-[200px] bg-emerald-700'>
         {flipped && (

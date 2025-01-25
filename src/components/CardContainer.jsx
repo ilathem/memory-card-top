@@ -152,17 +152,17 @@ export default function CardContainer() {
   
   return (
     <div>
-      <div className='w-full flex flex-row items-center justify-center'>
+      <div className='w-full flex flex-row items-center justify-center mb-4'>
         <label htmlFor='theme' className='text-xl'>Select your theme:</label>
         <input value={theme} onChange={e => setTheme(e.target.value)} placeholder='cats' id='theme' className='text-white placeholder:text-gray-500 text-xl placeholder:text-xl ml-2 p-1'/>
         <button
-          className='border-blue-700 text-blue-700 border-2 px-4 py-2 text-xl rounded-xl'
+          className='border-blue-700 text-blue-700 border-2 px-4 py-2 text-xl rounded-xl mr-2 hover:bg-slate-800 focus:bg-slate-800 transition-all'
           onClick={() => fetchGifs()}
         >
           Get new gifs!
         </button>
         <button
-          className='border-blue-700 text-blue-700 border-2 px-4 py-2 text-xl rounded-xl'
+          className='border-blue-700 text-blue-700 border-2 px-4 py-2 text-xl rounded-xl hover:bg-slate-800 focus:bg-slate-800 transition-all'
           onClick={() => clearStorage()}
         >
           Clear local storage
