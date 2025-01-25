@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Card from './Card';
 import { getRandomInt } from '../utils';
 
@@ -10,8 +10,8 @@ const searchUrl = `https://api.giphy.com/v1/gifs/search?api_key=${api_key}&q=${s
 export default function CardContainer() {
   const [gifs, setGifs] = useState();
   const [cardArray, setCardArray] = useState([]);
-  const [firstSelectedCard, setFirstSelectedCard] = useState();
   const [score, setScore] = useState(0);
+  const firstSelectedCardRef = useRef(null);
 
   useEffect(() => {
     setGifs(JSON.parse(localStorage.getItem('gifs')));
@@ -22,6 +22,7 @@ export default function CardContainer() {
   }, [gifs]);
 
   const fetchGifs = () => {
+    console.log('fetching new gifts...');
     fetch(searchUrl)
       .then((res) => res.json())
       .then((data) => {
@@ -57,6 +58,7 @@ export default function CardContainer() {
 
   const selectCard = (cardArrayIndex) => {
     console.log(`selecting ${cardArrayIndex}`);
+    console.log(`value stored in firstSelectedCardRef is ${firstSelectedCardRef.current}`)
     setCardArray(
       cardArray.map((value, index) => {
         if (index === cardArrayIndex) {
@@ -69,8 +71,12 @@ export default function CardContainer() {
         }
       })
     );
-    if (!firstSelectedCard) setFirstSelectedCard(cardArrayIndex);
-    else {
+    if (firstSelectedCardRef.current === null) {
+      console.log(`setting first selected card to ${cardArrayIndex}`);
+      firstSelectedCardRef.current = cardArrayIndex;
+    } else {
+      console.log('comparing cards');
+      const firstSelectedCard = firstSelectedCardRef.current;
       if (
         cardArray[firstSelectedCard].gif.id === cardArray[cardArrayIndex].gif.id
       ) {
@@ -86,7 +92,6 @@ export default function CardContainer() {
             }
           })
         );
-        setFirstSelectedCard(null);
       } else {
         setTimeout(() => {
           setCardArray(
@@ -102,9 +107,9 @@ export default function CardContainer() {
             })
           );
         }, 2000);
-        setFirstSelectedCard(null);
         setScore(score + 1);
       }
+      firstSelectedCardRef.current = null;
     }
   };
 

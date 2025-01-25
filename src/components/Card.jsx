@@ -11,11 +11,11 @@ export default function Card({
   const alt = gif.title;
 
   useEffect(() => {
-    console.log(`card ${indexNumber} is ${!flipped && 'not'} flipped`);
+    console.log(`card ${indexNumber} is ${flipped ? '' : 'not '}flipped`);
   }, [flipped]);
 
   useEffect(() => {
-    console.log(`match found for ${indexNumber}`);
+    console.log(`match ${matchFound ? '' : 'not '}found for ${indexNumber}`);
   }, [matchFound]);
 
   if (matchFound)
@@ -31,23 +31,15 @@ export default function Card({
 
   return (
     <div onClick={() => !flipped && selectCard()}>
-      {flipped ? (
-        <div className='rounded-xl w-[200px] h-[200px] bg-transparent'>
+      <div className='rounded-xl w-[200px] h-[200px] bg-emerald-700'>
+        {flipped && (
           <img
             src={src}
             alt={alt}
             className='rounded-xl w-[200px] h-[200px] object-cover object-center'
-          />{' '}
-        </div>
-      ) : (
-        <div className='opacity-25 rounded-xl w-[200px] h-[200px] bg-emerald-900'>
-          <img
-            src={src}
-            alt={alt}
-            className='rounded-xl w-[200px] h-[200px] object-cover object-center'
-          />{' '}
-        </div>
-      )}
+          />
+        )}{' '}
+      </div>
     </div>
   );
 }
