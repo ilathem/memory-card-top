@@ -45,35 +45,46 @@ export default function CardContainer() {
         tempCardArray.forEach((card) => {
           if (card.gif.id === gif.id) numInstances++;
         });
-        console.log(`selected gif ${gif.id}`);
-        console.log(Object.assign({}, tempCardArray));
-        console.log(`number of instances is ${numInstances}`);
+        // console.log(`selected gif ${gif.id}`);
+        // console.log(Object.assign({}, tempCardArray));
+        // console.log(`number of instances is ${numInstances}`);
         if (numInstances > 1) continue;
         else break;
       }
-      tempCardArray.push({ matchFound: false, flipped: false, gif: gif });
+      tempCardArray.push({
+        clickable: true,
+        matchFound: false,
+        flipped: false,
+        gif: gif,
+      });
     }
+    // console.log(tempCardArray);
     setCardArray(tempCardArray);
   };
 
   const selectCard = (cardArrayIndex) => {
     console.log(`selecting ${cardArrayIndex}`);
-    console.log(`value stored in firstSelectedCardRef is ${firstSelectedCardRef.current}`)
-    setCardArray(
-      cardArray.map((value, index) => {
-        if (index === cardArrayIndex) {
-          return {
-            ...value,
-            flipped: true,
-          };
-        } else {
-          return value;
-        }
-      })
+    console.log(
+      `value stored in firstSelectedCardRef is ${firstSelectedCardRef.current}`
     );
     if (firstSelectedCardRef.current === null) {
       console.log(`setting first selected card to ${cardArrayIndex}`);
       firstSelectedCardRef.current = cardArrayIndex;
+      setCardArray(
+        cardArray.map((value, index) => {
+          if (index === cardArrayIndex) {
+            return {
+              ...value,
+              flipped: true,
+              clickable: false,
+            };
+          } else {
+            return {
+              ...value,
+            };
+          }
+        })
+      );
     } else {
       console.log('comparing cards');
       const firstSelectedCard = firstSelectedCardRef.current;
@@ -93,20 +104,41 @@ export default function CardContainer() {
           })
         );
       } else {
+        setCardArray(
+          cardArray.map((value, index) => {
+            if (index === cardArrayIndex) {
+              return {
+                ...value,
+                flipped: true,
+                clickable: false,
+              };
+            } else {
+              return {
+                ...value,
+                clickable: false,
+              };
+            }
+          })
+        );
+        // setCardArray(cardArray.map((card) => ({ ...card, clickable: false })));
         setTimeout(() => {
           setCardArray(
             cardArray.map((value, index) => {
               if (index === firstSelectedCard || index === cardArrayIndex) {
                 return {
                   ...value,
+                  clickable: true,
                   flipped: false,
                 };
               } else {
-                return value;
+                return {
+                  ...value,
+                  clickable: true,
+                };
               }
             })
           );
-        }, 2000);
+        }, 700);
         setScore(score + 1);
       }
       firstSelectedCardRef.current = null;
@@ -137,6 +169,7 @@ export default function CardContainer() {
               selectCard={() => selectCard(index)}
               flipped={card.flipped}
               matchFound={card.matchFound}
+              clickable={card.clickable}
             />
           ))}
       </div>
