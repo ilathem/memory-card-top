@@ -55,7 +55,7 @@ export default function Card({
         }
       }}
       tabIndex={'0'}
-      className='rounded-xl w-[200px] h-[200px] bg-emerald-700 grid place-content-center'
+      className='rounded-xl w-[200px] h-[200px] bg-emerald-700 grid place-content-center cursor-pointer'
     >
       {flipped && (
         <img
