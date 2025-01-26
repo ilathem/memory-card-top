@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import brain from '../../public/reshot-icon-brain-Q5WBF2N9ER.svg';
 
 export default function Card({
   indexNumber,
@@ -54,16 +55,16 @@ export default function Card({
         }
       }}
       tabIndex={'0'}
+      className='rounded-xl w-[200px] h-[200px] bg-emerald-700 grid place-content-center'
     >
-      <div className='rounded-xl w-[200px] h-[200px] bg-emerald-700'>
-        {flipped && (
-          <img
-            src={src}
-            alt={alt}
-            className='rounded-xl w-[200px] h-[200px] object-cover object-center'
-          />
-        )}{' '}
-      </div>
+      {flipped && (
+        <img
+          src={src}
+          alt={alt}
+          className='rounded-xl w-[200px] h-[200px] object-cover object-center'
+        />
+      )}
+      {''}
     </a>
   );
 }

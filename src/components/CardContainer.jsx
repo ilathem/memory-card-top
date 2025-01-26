@@ -178,7 +178,7 @@ export default function CardContainer() {
         <input
           value={theme}
           onChange={(e) => setTheme(e.target.value)}
-          onKeyUp={(e) => e.code === "Enter" && fetchGifs()}
+          onKeyUp={(e) => e.code === 'Enter' && fetchGifs()}
           placeholder='cats'
           id='theme'
           className='text-white placeholder:text-gray-500 text-xl placeholder:text-xl p-1'
