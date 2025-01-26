@@ -22,8 +22,8 @@ export default function Card({
       strictModeRunTwice.current = false;
       return;
     }
-    console.log(`card ${indexNumber} is ${flipped ? '' : 'not '}flipped`);
-    console.log(`match ${matchFound ? '' : 'not '}found for ${indexNumber}`);
+    // console.log(`card ${indexNumber} is ${flipped ? '' : 'not '}flipped`);
+    // console.log(`match ${matchFound ? '' : 'not '}found for ${indexNumber}`);
   }, [flipped, matchFound]);
 
   if (matchFound)
