@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import brain from '../assets/reshot-icon-brain-Q5WBF2N9ER.svg';
+import brain from '../reshot-icon-brain-Q5WBF2N9ER.svg';
 
 export default function Card({
   indexNumber,
