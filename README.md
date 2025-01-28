@@ -8,3 +8,4 @@ for [The Odin Project](https://www.theodinproject.com/).
 - Vite
 - React
 - Tailwind
+- Vercel
